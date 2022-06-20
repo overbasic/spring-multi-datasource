@@ -1,0 +1,47 @@
+version: "3"
+services:
+  db-master:
+    container_name: master
+    build:
+      context: ./
+      dockerfile: master/Dockerfile
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    volumes:
+      - my-db-master:/var/lib/mysql
+      - my-db-master:/var/lib/mysql-files
+    networks:
+      - net-mysql
+
+  db-slave:
+    container_name: slave
+    build:
+      context: ./
+      dockerfile: slave/Dockerfile
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3307:3306'
+    volumes:
+      - my-db-slave:/var/lib/mysql
+      - my-db-slave:/var/lib/mysql-files
+    networks:
+      - net-mysql
+
+volumes:
+  my-db-master:
+  my-db-slave:
+
+networks:
+  net-mysql:
+    driver: bridge
