@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 services:
   db-master:
     container_name: master
@@ -17,7 +17,7 @@ services:
       - my-db-master:/var/lib/mysql
       - my-db-master:/var/lib/mysql-files
     networks:
-      - net-mysql
+      - mysql-replica
 
   db-slave:
     container_name: slave
@@ -36,12 +36,13 @@ services:
       - my-db-slave:/var/lib/mysql
       - my-db-slave:/var/lib/mysql-files
     networks:
-      - net-mysql
+      - mysql-replica
 
 volumes:
   my-db-master:
   my-db-slave:
 
 networks:
-  net-mysql:
+  mysql-replica:
     driver: bridge
+    name: mysql-replica
